@@ -1,0 +1,40 @@
+version: '3'
+services:
+  nifi:
+    image: apache/nifi:latest
+    ports:
+      # HTTP
+      - 8080:8080/tcp
+      # HTTPS
+      - 8443:8443/tcp
+    volumes:
+      - ./nifi-data:/opt/nifi/nifi-current/state/local   
+
+    environment:
+      NIFI_WEB_HTTP_HOST: '0.0.0.0'
+      NIFI_WEB_HTTP_PORT: '8080'
+
+  influxdb:
+    image: influxdb:latest
+    volumes:
+      - ./influxdb-data:/var/lib/influxdb
+    ports:
+      - 8086:8086
+
+  chronograf:
+    image: chronograf:latest
+    depends_on:
+      - influxdb
+    ports:
+      - 8888:8888
+    volumes:
+      - ./chronograf-data:/var/lib/chronograf
+
+  grafana:
+    image: grafana/grafana:latest
+    depends_on:
+      - influxdb
+    ports:
+      - 3000:3000
+    volumes:
+      - ./grafana-data:/var/lib/grafana
