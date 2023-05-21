@@ -2,4 +2,4 @@
 chronograf-data
 influxdb-data
 nifi-data
-.env
+.venv
