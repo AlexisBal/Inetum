@@ -3,3 +3,4 @@ chronograf-data
 influxdb-data
 nifi-data
 venv
+.DS_Store
