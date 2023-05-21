@@ -2,4 +2,4 @@ grafana-data
 chronograf-data
 influxdb-data
 nifi-data
-.venv
+venv
