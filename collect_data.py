@@ -26,18 +26,20 @@ while True:
     for file_name in os.listdir('data'):
         print(f"Processing {file_name}...")
         if file_name.endswith('.csv'):
-            # Load CSV file
-            df = pd.read_csv(os.path.join('data', file_name))
+            # Load CSV file with headers (station, timestamp, consumption)
+            df = pd.read_csv(os.path.join('data', file_name), header=None)
+            print(f"{file_name} loaded successfully!")
 
             # Iterate over each row in the DataFrame
             for index, row in df.iterrows():
                 station, timestamp, consumption = row[0], row[1], row[2]
-                print(f"Storing data for {station}...")
-
+                station_name, measurement_type = station.split('-')[1].split('.')
+                print(f"Storing data for {station_name}...")
+                
                 # Create a data point
                 point = (
-                    Point(station)
-                    .tag("station", station.split('.')[1])
+                    Point(measurement_type)
+                    .tag("station", station_name)
                     .time(pd.to_datetime(timestamp, unit='s').isoformat(), WritePrecision.NS)
                     .field("consumption", float(consumption))
                 )
@@ -48,10 +50,12 @@ while True:
                 # separate points by 1 second
                 time.sleep(1) 
 
-                print(f"Data for {station} stored successfully!")
-                
-                # Delete the CSV file
-                os.remove(os.path.join('data', file_name))
+                print(f"CSV local data for {station} stored successfully!")
+
+                if index == len(df) - 1:
+                    # Delete the CSV file
+                    os.remove(os.path.join('data', file_name))
+                    print(f"{file_name} deleted successfully!")
 
     print("Job done!")
-    time.sleep(300)  # wait for 5 minutes before checking the directory again
+    time.sleep(10)  # wait for 5 minutes before checking the directory again

@@ -34,4 +34,4 @@ while True:
     data = generate_data()
     write_to_csv(data)
     print("Data generated successfully!")
-    time.sleep(300)  # sleep for 5 minutes
+    time.sleep(10)  # sleep for 5 minutes
